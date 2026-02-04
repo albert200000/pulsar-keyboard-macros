@@ -8,7 +8,7 @@ class OneLineInputView
   constructor: (serializedState, placeholderText = 'Macro name') ->
     # Create root element
     @element = document.createElement('div')
-    @element.classList.add('atom-keyboard-macros')
+    @element.classList.add('pulsar-keyboard-macros')
 
     @editorElement = document.createElement('atom-text-editor')
     @editor = atom.workspace.buildTextEditor({

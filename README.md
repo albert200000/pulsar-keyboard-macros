@@ -1,4 +1,4 @@
-# atom-keyboard-macros package
+# pulsar-keyboard-macros package
 
 Keyboard macro extension for Atom.
 
@@ -22,21 +22,21 @@ In version 0.6.0 or later, it also records the operation of the search & replace
 
 # Other Methods
 
-- atom-keyboard-macros:name_last_kbd_macro
+- pulsar-keyboard-macros:name_last_kbd_macro
     Give a command name to the most recently defined keyboard macro.
-    You can execute it, in command palette, use 'atom-keyboard-macros.user:{a-command-name}'.
+    You can execute it, in command palette, use 'pulsar-keyboard-macros.user:{a-command-name}'.
 
-- atom-keyboard-macros:execute_named_macro
-    Execute a named keyboard macro(see atom-keyboard-macros:name_last_kbd_macro).
+- pulsar-keyboard-macros:execute_named_macro
+    Execute a named keyboard macro(see pulsar-keyboard-macros:name_last_kbd_macro).
 
-- atom-keyboard-macros:save
+- pulsar-keyboard-macros:save
     Save all named macros
 
-- atom-keyboard-macros:quick_save
+- pulsar-keyboard-macros:quick_save
     Quick save all named macros
 
-- atom-keyboard-macros:load
+- pulsar-keyboard-macros:load
     Load saved macros
 
-- atom-keyboard-macros:quick_load
+- pulsar-keyboard-macros:quick_load
     Load quick_saved macros

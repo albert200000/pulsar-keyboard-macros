@@ -175,10 +175,10 @@ class FindAndReplace
         item.replaceNext = @replaceNext
         item.replaceAll = @replaceAll
 
-    @replaceAllButton.removeEventListener  'click.atom-keyboard-macros', @replaceAllButtonHook
-    @replaceNextButton.removeEventListener 'click.atom-keyboard-macros', @replaceNextButtonHook
-    @nextButton.removeEventListener 'click.atom-keyboard-macros', @nextButtonHook
-    @findEditor.element.removeEventListener 'keydown.atom-keyboard-macros', @findEditorKeydownHook
+    @replaceAllButton.removeEventListener  'click.pulsar-keyboard-macros', @replaceAllButtonHook
+    @replaceNextButton.removeEventListener 'click.pulsar-keyboard-macros', @replaceNextButtonHook
+    @nextButton.removeEventListener 'click.pulsar-keyboard-macros', @nextButtonHook
+    @findEditor.element.removeEventListener 'keydown.pulsar-keyboard-macros', @findEditorKeydownHook
 
   #
   # hook handlers

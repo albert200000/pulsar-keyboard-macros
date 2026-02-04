@@ -1,4 +1,4 @@
-AtomKeyboardMacros = require '../lib/atom-keyboard-macros'
+AtomKeyboardMacros = require '../lib/pulsar-keyboard-macros'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
@@ -10,30 +10,30 @@ describe "AtomKeyboardMacros", ->
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage('atom-keyboard-macros')
+    activationPromise = atom.packages.activatePackage('pulsar-keyboard-macros')
 
-  describe "when the atom-keyboard-macros:toggle event is triggered", ->
+  describe "when the pulsar-keyboard-macros:toggle event is triggered", ->
     it "hides and shows the modal panel", ->
       # Before the activation event the view is not on the DOM, and no panel
       # has been created
-      expect(workspaceElement.querySelector('.atom-keyboard-macros')).not.toExist()
+      expect(workspaceElement.querySelector('.pulsar-keyboard-macros')).not.toExist()
 
       # This is an activation event, triggering it will cause the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'atom-keyboard-macros:toggle'
+      atom.commands.dispatch workspaceElement, 'pulsar-keyboard-macros:toggle'
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        expect(workspaceElement.querySelector('.atom-keyboard-macros')).toExist()
+        expect(workspaceElement.querySelector('.pulsar-keyboard-macros')).toExist()
 
-        atomKeyboardMacrosElement = workspaceElement.querySelector('.atom-keyboard-macros')
+        atomKeyboardMacrosElement = workspaceElement.querySelector('.pulsar-keyboard-macros')
         expect(atomKeyboardMacrosElement).toExist()
 
         atomKeyboardMacrosPanel = atom.workspace.panelForItem(atomKeyboardMacrosElement)
         expect(atomKeyboardMacrosPanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'atom-keyboard-macros:toggle'
+        atom.commands.dispatch workspaceElement, 'pulsar-keyboard-macros:toggle'
         expect(atomKeyboardMacrosPanel.isVisible()).toBe false
 
     it "hides and shows the view", ->
@@ -45,18 +45,18 @@ describe "AtomKeyboardMacros", ->
       # workspaceElement to the DOM are generally slower than those off DOM.
       jasmine.attachToDOM(workspaceElement)
 
-      expect(workspaceElement.querySelector('.atom-keyboard-macros')).not.toExist()
+      expect(workspaceElement.querySelector('.pulsar-keyboard-macros')).not.toExist()
 
       # This is an activation event, triggering it causes the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'atom-keyboard-macros:toggle'
+      atom.commands.dispatch workspaceElement, 'pulsar-keyboard-macros:toggle'
 
       waitsForPromise ->
         activationPromise
 
       runs ->
         # Now we can test for view visibility
-        atomKeyboardMacrosElement = workspaceElement.querySelector('.atom-keyboard-macros')
+        atomKeyboardMacrosElement = workspaceElement.querySelector('.pulsar-keyboard-macros')
         expect(atomKeyboardMacrosElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'atom-keyboard-macros:toggle'
+        atom.commands.dispatch workspaceElement, 'pulsar-keyboard-macros:toggle'
         expect(atomKeyboardMacrosElement).not.toBeVisible()

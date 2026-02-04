@@ -1,4 +1,4 @@
-AtomKeyboardMacrosView = require './atom-keyboard-macros-view'
+AtomKeyboardMacrosView = require './pulsar-keyboard-macros-view'
 RepeatCountView = require './repeat-count-view'
 OneLineInputView = require './one-line-input-view'
 {CompositeDisposable} = require 'atom'
@@ -41,9 +41,9 @@ module.exports = AtomKeyboardMacros =
   PluginCommand: PluginCommand
 
   activate: (state) ->
-    @quick_save_dirname = atom.packages.resolvePackagePath('atom-keyboard-macros') + '/__quick/'
+    @quick_save_dirname = atom.packages.resolvePackagePath('pulsar-keyboard-macros') + '/__quick/'
     @quick_save_filename = @quick_save_dirname + 'macros.atmkm'
-    @macro_dirname = atom.packages.resolvePackagePath('atom-keyboard-macros') + '/macros/'
+    @macro_dirname = atom.packages.resolvePackagePath('pulsar-keyboard-macros') + '/macros/'
 
     @atomKeyboardMacrosView = new AtomKeyboardMacrosView(state.atomKeyboardMacrosViewState)
     @messagePanel = atom.workspace.addBottomPanel(item: @atomKeyboardMacrosView.getElement(), visible: false)
@@ -64,20 +64,20 @@ module.exports = AtomKeyboardMacros =
     @subscriptions = new CompositeDisposable
 
     # Register commands
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:start_kbd_macro': => @start_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:end_kbd_macro': => @end_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:call_last_kbd_macro': => @call_last_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:repeat_last_kbd_macro': => @repeat_last_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:execute_macro_to_bottom': => @execute_macro_to_bottom()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:execute_macro_from_top_to_bottom': => @execute_macro_from_top_to_bottom()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:toggle': => @toggle()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:name_last_kbd_macro': => @name_last_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:execute_named_macro': => @execute_named_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:quick_save': => @quick_save()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:quick_load': => @quick_load()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:save': => @save()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:load': => @load()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'atom-keyboard-macros:all_macros_to_new_text_editor': => @all_macros_to_new_text_editor()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:start_kbd_macro': => @start_kbd_macro()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:end_kbd_macro': => @end_kbd_macro()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:call_last_kbd_macro': => @call_last_kbd_macro()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:repeat_last_kbd_macro': => @repeat_last_kbd_macro()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_macro_to_bottom': => @execute_macro_to_bottom()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_macro_from_top_to_bottom': => @execute_macro_from_top_to_bottom()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:name_last_kbd_macro': => @name_last_kbd_macro()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_named_macro': => @execute_named_macro()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:quick_save': => @quick_save()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:quick_load': => @quick_load()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:save': => @save()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:load': => @load()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:all_macros_to_new_text_editor': => @all_macros_to_new_text_editor()
 
     # make event listener
     @eventListener = @keyboardEventHandler.bind(this)
@@ -174,12 +174,12 @@ module.exports = AtomKeyboardMacros =
     @macronames_select_list_model.addItem name
 
     # remove old command if exists
-    prevCommand = atom.commands.selectorBasedListenersByCommandName['atom-keyboard-macros.user:' + name]
+    prevCommand = atom.commands.selectorBasedListenersByCommandName['pulsar-keyboard-macros.user:' + name]
     if prevCommand
-      atom.commands.selectorBasedListenersByCommandName['atom-keyboard-macros.user:' + name] = null
+      atom.commands.selectorBasedListenersByCommandName['pulsar-keyboard-macros.user:' + name] = null
 
     # add new command
-    atom.commands.add 'atom-workspace', ('atom-keyboard-macros.user:' + name), ->
+    atom.commands.add 'atom-workspace', ('pulsar-keyboard-macros.user:' + name), ->
       self.execute_macro_commands commands
 
   macro_to_string: (cmds) ->
@@ -332,7 +332,7 @@ module.exports = AtomKeyboardMacros =
     if @keyCaptured
       atom.beep()
       return
-    cmd = 'atom-keyboard-macros.user:' + name
+    cmd = 'pulsar-keyboard-macros.user:' + name
     editor = atom.workspace.getActiveTextEditor()
     atom.commands.dispatch(atom.views.getView(editor), cmd)
 

@@ -1,6 +1,6 @@
 {
   "bugs": {
-    "url": "https://github.com/albert200000/atom-keyboard-macros/issues"
+    "url": "https://github.com/albert200000/pulsar-keyboard-macros/issues"
   },
   "dependencies": {
     "atom-keymap": "^8.2.15",
@@ -13,14 +13,14 @@
   "engines": {
     "atom": ">=1.19.0 <2.0.0"
   },
-  "homepage": "https://github.com/albert200000/atom-keyboard-macros#readme",
+  "homepage": "https://github.com/albert200000/pulsar-keyboard-macros#readme",
   "keywords": [],
   "license": "MIT",
-  "main": "./lib/atom-keyboard-macros",
+  "main": "./lib/pulsar-keyboard-macros",
   "name": "pulsar-keyboard-macros",
   "repository": {
     "type": "git",
-    "url": "https://github.com/albert200000/atom-keyboard-macros.git"
+    "url": "https://github.com/albert200000/pulsar-keyboard-macros.git"
   },
   "version": "0.0.0",
   "devDependencies": {

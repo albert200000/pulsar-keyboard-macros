@@ -3,11 +3,11 @@ class AtomKeyboardMacrosView
   constructor: (serializedState) ->
     # Create root element
     @element = document.createElement('div')
-    @element.classList.add('atom-keyboard-macros')
+    @element.classList.add('pulsar-keyboard-macros')
 
     # Create message element
     message = document.createElement('div')
-    message.textContent = "<<atom-keyboard-macros panel>>"
+    message.textContent = "<<pulsar-keyboard-macros panel>>"
     message.classList.add('message')
     @element.appendChild(message)
 

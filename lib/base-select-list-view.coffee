@@ -25,10 +25,10 @@ class BaseSelectListView extends SelectListView
   initialize: (@listOfItems) ->
     super
 
-    @alternateScoring = atom.config.get 'atom-keyboard-macros.useAlternateScoring'
-    @scoreSubscription = atom.config.onDidChange 'atom-keyboard-macros.useAlternateScoring', ({newValue}) => @alternateScoring = newValue
+    @alternateScoring = atom.config.get 'pulsar-keyboard-macros.useAlternateScoring'
+    @scoreSubscription = atom.config.onDidChange 'pulsar-keyboard-macros.useAlternateScoring', ({newValue}) => @alternateScoring = newValue
 
-    @addClass('atom-keyboard-macros')
+    @addClass('pulsar-keyboard-macros')
     @setItems @listOfItems
 
   show: ->

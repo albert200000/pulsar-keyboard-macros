@@ -1,4 +1,4 @@
-AtomKeyboardMacrosView = require './atom-keyboard-macros-view'
+AtomKeyboardMacrosView = require './pulsar-keyboard-macros-view'
 {CompositeDisposable} = require 'atom'
 
 KeymapManager = require 'atom-keymap'
@@ -82,7 +82,7 @@ class MacroCommand
               event = MacroCommand.keydownEventFromString(s)
               cmds.push(new KeydownCommand(event))
 
-          when 'P'  # Plugins: ex  '*P:atom-keyboard-macros-vim:singleInstansiateFromSavedString:options'
+          when 'P'  # Plugins: ex  '*P:pulsar-keyboard-macros-vim:singleInstansiateFromSavedString:options'
             items = line.split(':', 4)
             packageName = items[1]
             method = items[2]

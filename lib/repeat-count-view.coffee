@@ -5,7 +5,7 @@ class RepeatCountView
   constructor: (serializedState) ->
     # Create root element
     @element = document.createElement('div')
-    @element.classList.add('atom-keyboard-macros')
+    @element.classList.add('pulsar-keyboard-macros')
 
     # Create message element
     message = document.createElement('div')

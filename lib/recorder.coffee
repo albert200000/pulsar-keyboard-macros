@@ -97,7 +97,7 @@ class Recorder
         unless command_name
           bind = keybind[0]
           command_name = bind.command
-        unless command_name.indexOf('atom-keyboard-macros') == 0
+        unless command_name.indexOf('pulsar-keyboard-macros') == 0
           @sequence.push(new DispatchCommand(command_name))
 
         #console.log('pushDispatchCommand1', command_name, 'TextMode')
