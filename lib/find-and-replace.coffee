@@ -24,14 +24,22 @@ class FindAndReplace
   isRecording: false
 
   activate: ->
-    # wake up find-and-replace
     @editor = atom.workspace.getActiveTextEditor()
-    @editorElement = atom.views.getView(@editor)
-    atom.commands.dispatch(@editorElement, 'find-and-replace:toggle') # wake up if not active
-    atom.commands.dispatch(@editorElement, 'find-and-replace:toggle') # hide
 
-    isRecording = false
-    @getFindAndReplaceMethods()
+    # Determine a safe dispatch target
+    target = null
+    if @editor?
+      target = atom.views.getView(@editor)
+    else
+      target = atom.views.getView(atom.workspace)  # safe fallback
+
+      # Only dispatch if we actually have a DOM view
+      if target?
+        atom.commands.dispatch(target, 'find-and-replace:toggle')  # wake up if not active
+        atom.commands.dispatch(target, 'find-and-replace:toggle')  # hide
+
+        isRecording = false
+        @getFindAndReplaceMethods()
 
   deactivate: ->
 
