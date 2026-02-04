@@ -1,5 +1,5 @@
 module.exports =
-class AtomKeyboardMacrosView
+class PulsarKeyboardMacrosView
   constructor: (serializedState) ->
     # Create root element
     @element = document.createElement('div')

@@ -1,11 +1,11 @@
-AtomKeyboardMacros = require '../lib/pulsar-keyboard-macros'
+PulsarKeyboardMacros = require '../lib/pulsar-keyboard-macros'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
-describe "AtomKeyboardMacros", ->
+describe "PulsarKeyboardMacros", ->
   [workspaceElement, activationPromise] = []
 
   beforeEach ->
@@ -28,13 +28,13 @@ describe "AtomKeyboardMacros", ->
       runs ->
         expect(workspaceElement.querySelector('.pulsar-keyboard-macros')).toExist()
 
-        atomKeyboardMacrosElement = workspaceElement.querySelector('.pulsar-keyboard-macros')
-        expect(atomKeyboardMacrosElement).toExist()
+        PulsarKeyboardMacrosElement = workspaceElement.querySelector('.pulsar-keyboard-macros')
+        expect(PulsarKeyboardMacrosElement).toExist()
 
-        atomKeyboardMacrosPanel = atom.workspace.panelForItem(atomKeyboardMacrosElement)
-        expect(atomKeyboardMacrosPanel.isVisible()).toBe true
+        PulsarKeyboardMacrosPanel = atom.workspace.panelForItem(PulsarKeyboardMacrosElement)
+        expect(PulsarKeyboardMacrosPanel.isVisible()).toBe true
         atom.commands.dispatch workspaceElement, 'pulsar-keyboard-macros:toggle'
-        expect(atomKeyboardMacrosPanel.isVisible()).toBe false
+        expect(PulsarKeyboardMacrosPanel.isVisible()).toBe false
 
     it "hides and shows the view", ->
       # This test shows you an integration test testing at the view level.
@@ -56,7 +56,7 @@ describe "AtomKeyboardMacros", ->
 
       runs ->
         # Now we can test for view visibility
-        atomKeyboardMacrosElement = workspaceElement.querySelector('.pulsar-keyboard-macros')
-        expect(atomKeyboardMacrosElement).toBeVisible()
+        PulsarKeyboardMacrosElement = workspaceElement.querySelector('.pulsar-keyboard-macros')
+        expect(PulsarKeyboardMacrosElement).toBeVisible()
         atom.commands.dispatch workspaceElement, 'pulsar-keyboard-macros:toggle'
-        expect(atomKeyboardMacrosElement).not.toBeVisible()
+        expect(PulsarKeyboardMacrosElement).not.toBeVisible()

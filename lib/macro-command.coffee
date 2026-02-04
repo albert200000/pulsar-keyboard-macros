@@ -1,4 +1,4 @@
-AtomKeyboardMacrosView = require './pulsar-keyboard-macros-view'
+PulsarKeyboardMacrosView = require './pulsar-keyboard-macros-view'
 {CompositeDisposable} = require 'atom'
 
 KeymapManager = require 'atom-keymap'

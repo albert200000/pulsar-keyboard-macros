@@ -1,4 +1,4 @@
-AtomKeyboardMacrosView = require './pulsar-keyboard-macros-view'
+PulsarKeyboardMacrosView = require './pulsar-keyboard-macros-view'
 RepeatCountView = require './repeat-count-view'
 OneLineInputView = require './one-line-input-view'
 {CompositeDisposable} = require 'atom'
@@ -10,8 +10,8 @@ BaseSelectListView = require './base-select-list-view'
 MacroNameSelectListModel = require './macro-name-select-list-model'
 FilenameSelectListModel = require './filename-select-list-model'
 
-module.exports = AtomKeyboardMacros =
-  atomKeyboardMacrosView: null
+module.exports = PulsarKeyboardMacros =
+  PulsarKeyboardMacrosView: null
   messagePanel: null
   repeatCountView: null
   repeatCountPanel: null
@@ -45,8 +45,8 @@ module.exports = AtomKeyboardMacros =
     @quick_save_filename = @quick_save_dirname + 'macros.atmkm'
     @macro_dirname = atom.packages.resolvePackagePath('pulsar-keyboard-macros') + '/macros/'
 
-    @atomKeyboardMacrosView = new AtomKeyboardMacrosView(state.atomKeyboardMacrosViewState)
-    @messagePanel = atom.workspace.addBottomPanel(item: @atomKeyboardMacrosView.getElement(), visible: false)
+    @PulsarKeyboardMacrosView = new PulsarKeyboardMacrosView(state.PulsarKeyboardMacrosViewState)
+    @messagePanel = atom.workspace.addBottomPanel(item: @PulsarKeyboardMacrosView.getElement(), visible: false)
 
     @repeatCountView = new RepeatCountView(state.repeatCountViewState)
     @repeatCountPanel = atom.workspace.addModalPanel(item: @repeatCountView.getElement(), visible: false)
@@ -96,12 +96,12 @@ module.exports = AtomKeyboardMacros =
     @repeatCountView.destroy()
     @messagePanel.destroy()
     @subscriptions.dispose()
-    @atomKeyboardMacrosView.destroy()
+    @PulsarKeyboardMacrosView.destroy()
     window.removeEventListener('keydown', @escapeListener, true)
     window.removeEventListener('keydown', @eventListener, true)
 
   serialize: ->
-    atomKeyboardMacrosViewState: @atomKeyboardMacrosView.serialize()
+    PulsarKeyboardMacrosViewState: @PulsarKeyboardMacrosView.serialize()
     repeatCountViewState: @repeatCountView.serialize()
 
   toggle: ->
@@ -111,7 +111,7 @@ module.exports = AtomKeyboardMacros =
       @messagePanel.show()
 
   setText: (text) ->
-    @atomKeyboardMacrosView.setText(text)
+    @PulsarKeyboardMacrosView.setText(text)
     @messagePanel.show()
 
   # @eventListener
