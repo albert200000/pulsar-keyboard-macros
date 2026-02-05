@@ -41,9 +41,10 @@ module.exports = PulsarKeyboardMacros =
   PluginCommand: PluginCommand
 
   activate: (state) ->
-    @quick_save_dirname = atom.packages.resolvePackagePath('pulsar-keyboard-macros') + '/__quick/'
+    packagePath = atom.packages.resolvePackagePath('pulsar-keyboard-macros')
+    @quick_save_dirname = packagePath + '/__quick/'
     @quick_save_filename = @quick_save_dirname + 'macros.atmkm'
-    @macro_dirname = atom.packages.resolvePackagePath('pulsar-keyboard-macros') + '/macros/'
+    @macro_dirname = packagePath + '/macros/'
 
     @PulsarKeyboardMacrosView = new PulsarKeyboardMacrosView(state.PulsarKeyboardMacrosViewState)
     @messagePanel = atom.workspace.addBottomPanel(item: @PulsarKeyboardMacrosView.getElement(), visible: false)
