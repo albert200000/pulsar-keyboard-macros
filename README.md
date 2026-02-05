@@ -5,6 +5,7 @@ Keyboard macro extension for Pulsar.
 # Requirements
 
 openSUSE / Fedora / RHEL / CentOS: libxext-devel libxtst-devel libxkbfile-devel
+
 Debian / Ubuntu / Linux Mint: libxext-dev libxtst-dev libxkbfile-dev
 
 # Shortcuts
