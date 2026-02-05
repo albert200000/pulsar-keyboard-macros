@@ -1,10 +1,11 @@
 # pulsar-keyboard-macros package
 
-Keyboard macro extension for Atom.
+Keyboard macro extension for Pulsar.
 
-# New Features
+# Requirements
 
-In version 0.6.0 or later, it also records the operation of the search & replace view.
+openSUSE / Fedora / RHEL / CentOS: libxext-devel libxtst-devel libxkbfile-devel
+Debian / Ubuntu / Linux Mint: libxext-dev libxtst-dev libxkbfile-dev
 
 # Shortcuts
 
