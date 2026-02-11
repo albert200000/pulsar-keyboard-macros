@@ -5,7 +5,6 @@ OneLineInputView = require './one-line-input-view'
 Recorder = require './recorder'
 {MacroCommand, DispatchCommand, PluginCommand} = require './macro-command'
 fs = require 'fs'
-FindAndReplace = require './find-and-replace'
 BaseSelectListView = require './base-select-list-view'
 MacroNameSelectListModel = require './macro-name-select-list-model'
 FilenameSelectListModel = require './filename-select-list-model'
@@ -35,8 +34,6 @@ module.exports = PulsarKeyboardMacros =
   baseSelectListView: null
   macronames_select_list_model: null
   filename_select_list_model: null
-
-  find: null
 
   PluginCommand: PluginCommand
 
@@ -86,11 +83,8 @@ module.exports = PulsarKeyboardMacros =
 
     @keyCaptured = false
     @recorder = new Recorder()
-    @find = new FindAndReplace()
-    @find.activate()
 
   deactivate: ->
-    @find.deactivate()
     @saveFilenameInputView.destroy()
     @oneLineInputView.destroy()
     @repeatCountPanel.destroy()
@@ -134,7 +128,6 @@ module.exports = PulsarKeyboardMacros =
     @recorder.start()
     @keyCaptured = true
     window.addEventListener('keydown', @eventListener, true)
-    @find.startRecording(@recorder)
 
     workspaceElement = atom.views.getView(atom.workspace)
     workspaceElement.focus()
@@ -148,7 +141,6 @@ module.exports = PulsarKeyboardMacros =
     this.setText('end recording keyboard macros.')
     @recorder.stop()
     @macroCommands = @recorder.getSequence()
-    @find.stopRecording()
 
   #
   # Util method: execute macro once
@@ -284,7 +276,7 @@ module.exports = PulsarKeyboardMacros =
       if err
         console.error err
       else
-        macros = MacroCommand.loadStringAsMacroCommands text, self.find
+        macros = MacroCommand.loadStringAsMacroCommands text
         for name, cmds of macros
           if name.length == 0
             self.macroCommands = cmds

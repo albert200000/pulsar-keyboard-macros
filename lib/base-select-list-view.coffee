@@ -23,7 +23,7 @@ class BaseSelectListView extends SelectListView
     super state
 
   initialize: (@listOfItems) ->
-    super
+    super()
 
     @alternateScoring = atom.config.get 'pulsar-keyboard-macros.useAlternateScoring'
     @scoreSubscription = atom.config.onDidChange 'pulsar-keyboard-macros.useAlternateScoring', ({newValue}) => @alternateScoring = newValue
@@ -122,13 +122,16 @@ class BaseSelectListView extends SelectListView
         @span title: name, -> highlighter(name, matches, 0)
 
   populateList: ->
+    if !@model
+      return
+
     if @model.populateList
       return @model.populateList()
 
     if @alternateScoring
       @populateAlternateList()
     else
-      super
+      super()
 
   # This is modified copy/paste from SelectListView#populateList, require jQuery!
   # Should be temporary

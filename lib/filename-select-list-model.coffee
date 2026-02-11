@@ -4,6 +4,7 @@ SelectListModel = require './select-list-model'
 module.exports =
 class FilenameSelectListModel extends SelectListModel
   constructor: (@macro_dirname) ->
+    super()
 
   getListOfItems: ->
     exists = fs.existsSync @macro_dirname
