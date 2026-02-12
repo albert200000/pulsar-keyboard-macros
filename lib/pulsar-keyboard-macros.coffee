@@ -1,13 +1,6 @@
-PulsarKeyboardMacrosView = require './pulsar-keyboard-macros-view'
-RepeatCountView = require './repeat-count-view'
-OneLineInputView = require './one-line-input-view'
 {CompositeDisposable} = require 'atom'
-Recorder = require './recorder'
-{MacroCommand, DispatchCommand, PluginCommand} = require './macro-command'
+{MacroCommand, PluginCommand} = require './macro-command'
 fs = require 'fs'
-BaseSelectListView = require './base-select-list-view'
-MacroNameSelectListModel = require './macro-name-select-list-model'
-FilenameSelectListModel = require './filename-select-list-model'
 
 module.exports = PulsarKeyboardMacros =
   PulsarKeyboardMacrosView: null
@@ -22,6 +15,7 @@ module.exports = PulsarKeyboardMacros =
   eventListener: null
   escapeListener: null
   escapeKeyPressed: false
+  viewsInitialized: false
   macroCommands: null
 
   runningName_last_kbd_macro: false
@@ -38,66 +32,80 @@ module.exports = PulsarKeyboardMacros =
   PluginCommand: PluginCommand
 
   activate: (state) ->
-    packagePath = atom.packages.resolvePackagePath('pulsar-keyboard-macros')
-    @quick_save_dirname = packagePath + '/__quick/'
-    @quick_save_filename = @quick_save_dirname + 'macros.atmkm'
-    @macro_dirname = packagePath + '/macros/'
+    @viewsInitialized = false
 
-    @PulsarKeyboardMacrosView = new PulsarKeyboardMacrosView(state.PulsarKeyboardMacrosViewState)
-    @messagePanel = atom.workspace.addBottomPanel(item: @PulsarKeyboardMacrosView.getElement(), visible: false)
+    # Deferred initialization
+    deferredInit = =>
+      unless @viewsInitialized
+        PulsarKeyboardMacrosView = require './pulsar-keyboard-macros-view'
+        RepeatCountView = require './repeat-count-view'
+        OneLineInputView = require './one-line-input-view'
+        Recorder = require './recorder'
+        BaseSelectListView = require './base-select-list-view'
+        MacroNameSelectListModel = require './macro-name-select-list-model'
+        FilenameSelectListModel = require './filename-select-list-model'
 
-    @repeatCountView = new RepeatCountView(state.repeatCountViewState)
-    @repeatCountPanel = atom.workspace.addModalPanel(item: @repeatCountView.getElement(), visible: false)
+        packagePath = atom.packages.resolvePackagePath('pulsar-keyboard-macros')
+        @quick_save_dirname = packagePath + '/__quick/'
+        @quick_save_filename = @quick_save_dirname + 'macros.atmkm'
+        @macro_dirname = packagePath + '/macros/'
 
-    @oneLineInputView = new OneLineInputView(state.oneLineInputViewState)
-    @saveFilenameInputView = new OneLineInputView(state.saveFilenameInputViewState, 'Save filename')
+        @PulsarKeyboardMacrosView = new PulsarKeyboardMacrosView(state.PulsarKeyboardMacrosViewState)
+        @messagePanel = atom.workspace.addBottomPanel(item: @PulsarKeyboardMacrosView.getElement(), visible: false)
 
-    @macronames_select_list_model = new MacroNameSelectListModel()
-    @macroNamesSelectListView = new BaseSelectListView(state.macroNamesSelectListViewState, @macronames_select_list_model)
+        @repeatCountView = new RepeatCountView(state.repeatCountViewState)
+        @repeatCountPanel = atom.workspace.addModalPanel(item: @repeatCountView.getElement(), visible: false)
 
-    @filename_select_list_model = new FilenameSelectListModel(@macro_dirname)
-    @baseSelectListView = new BaseSelectListView(state.baseSelectListViewState, @filename_select_list_model)
+        @oneLineInputView = new OneLineInputView(state.oneLineInputViewState)
+        @saveFilenameInputView = new OneLineInputView(state.saveFilenameInputViewState, 'Save filename')
 
-    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
+        @macronames_select_list_model = new MacroNameSelectListModel()
+        @macroNamesSelectListView = new BaseSelectListView(state.macroNamesSelectListViewState, @macronames_select_list_model)
+
+        @filename_select_list_model = new FilenameSelectListModel(@macro_dirname)
+        @baseSelectListView = new BaseSelectListView(state.baseSelectListViewState, @filename_select_list_model)
+
+        # Initialize event listeners
+        @eventListener = @keyboardEventHandler.bind(this)
+        @escapeListener = @onEscapeKey.bind(this)
+        @keyCaptured = false
+        @recorder = new Recorder()
+
+        @viewsInitialized = true
+
+    cmd = (fn) -> => (deferredInit(); fn.call(@))
+
+    # Register commands immediately
     @subscriptions = new CompositeDisposable
-
-    # Register commands
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:start_kbd_macro': => @start_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:end_kbd_macro': => @end_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:call_last_kbd_macro': => @call_last_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:repeat_last_kbd_macro': => @repeat_last_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_macro_to_bottom': => @execute_macro_to_bottom()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_macro_from_top_to_bottom': => @execute_macro_from_top_to_bottom()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:toggle': => @toggle()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:name_last_kbd_macro': => @name_last_kbd_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_named_macro': => @execute_named_macro()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:quick_save': => @quick_save()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:quick_load': => @quick_load()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:save': => @save()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:load': => @load()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:all_macros_to_new_text_editor': => @all_macros_to_new_text_editor()
-
-    # make event listener
-    @eventListener = @keyboardEventHandler.bind(this)
-    @escapeListener = @onEscapeKey.bind(this)
-
-    @keyCaptured = false
-    @recorder = new Recorder()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:start_kbd_macro': cmd(@start_kbd_macro.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:end_kbd_macro': cmd(@end_kbd_macro.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:call_last_kbd_macro': cmd(@call_last_kbd_macro.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:repeat_last_kbd_macro': cmd(@repeat_last_kbd_macro.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_macro_to_bottom': cmd(@execute_macro_to_bottom.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_macro_from_top_to_bottom': cmd(@execute_macro_from_top_to_bottom.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:toggle': cmd(@toggle.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:name_last_kbd_macro': cmd(@name_last_kbd_macro.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:execute_named_macro': cmd(@execute_named_macro.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:quick_save': cmd(@quick_save.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:quick_load': cmd(@quick_load.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:save': cmd(@save.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:load': cmd(@load.bind(this))
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pulsar-keyboard-macros:all_macros_to_new_text_editor': cmd(@all_macros_to_new_text_editor.bind(this))
 
   deactivate: ->
-    @saveFilenameInputView.destroy()
-    @oneLineInputView.destroy()
-    @repeatCountPanel.destroy()
-    @repeatCountView.destroy()
-    @messagePanel.destroy()
-    @subscriptions.dispose()
-    @PulsarKeyboardMacrosView.destroy()
-    window.removeEventListener('keydown', @escapeListener, true)
-    window.removeEventListener('keydown', @eventListener, true)
+    if @saveFilenameInputView? then @saveFilenameInputView.destroy()
+    if @oneLineInputView? then @oneLineInputView.destroy()
+    if @repeatCountPanel? then @repeatCountPanel.destroy()
+    if @repeatCountView? then @repeatCountView.destroy()
+    if @messagePanel? then @messagePanel.destroy()
+    if @subscriptions? then @subscriptions.dispose()
+    if @PulsarKeyboardMacrosView? then @PulsarKeyboardMacrosView.destroy()
+    if @escapeListener? then window.removeEventListener('keydown', @escapeListener, true)
+    if @eventListener? then window.removeEventListener('keydown', @eventListener, true)
 
   serialize: ->
-    PulsarKeyboardMacrosViewState: @PulsarKeyboardMacrosView.serialize()
-    repeatCountViewState: @repeatCountView.serialize()
+    PulsarKeyboardMacrosViewState: @PulsarKeyboardMacrosView?.serialize()
+    repeatCountViewState: @repeatCountView?.serialize()
 
   toggle: ->
     if @messagePanel.isVisible()
