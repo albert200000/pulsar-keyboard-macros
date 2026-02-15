@@ -4,9 +4,9 @@ Keyboard macro extension for Pulsar.
 
 # Requirements
 
-openSUSE / Fedora / RHEL / CentOS: libxext-devel libxtst-devel libxkbfile-devel
+openSUSE / Fedora / RHEL / CentOS: libxext-devel libxtst-devel libxkbfile-devel libxkbcommon-devel wayland-devel
 
-Debian / Ubuntu / Linux Mint: libxext-dev libxtst-dev libxkbfile-dev
+Debian / Ubuntu / Linux Mint: libxext-dev libxtst-dev libxkbfile-dev libxkbcommon-dev wayland-dev
 
 # Shortcuts
 
