@@ -3,11 +3,11 @@
     "url": "https://github.com/albert200000/pulsar-keyboard-macros/issues"
   },
   "dependencies": {
-    "atom-keymap": "^8.2.15",
     "atom-space-pen-views": "^2.2.0",
     "fuzzaldrin": "^2.1.0",
     "fuzzaldrin-plus": "^0.6",
-    "jquery": "^3.0"
+    "jquery": "^3.0",
+    "@pulsar-edit/atom-keymap": "^9.0.2"
   },
   "description": "keyboard macro extension for Atom.",
   "engines": {
@@ -22,8 +22,5 @@
     "type": "git",
     "url": "https://github.com/albert200000/pulsar-keyboard-macros.git"
   },
-  "version": "0.1.6",
-  "devDependencies": {
-    "electron-rebuild": "^3.2.9"
-  }
+  "version": "0.1.6"
 }

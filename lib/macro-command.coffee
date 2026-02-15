@@ -1,7 +1,7 @@
 PulsarKeyboardMacrosView = require './pulsar-keyboard-macros-view'
 {CompositeDisposable} = require 'atom'
 
-KeymapManager = require 'atom-keymap'
+KeymapManager = require '@pulsar-edit/atom-keymap'
 keymaps = new KeymapManager
 keystrokeForKeyboardEvent = keymaps.keystrokeForKeyboardEvent
 #keydownEvent = keymaps.keydownEvent
